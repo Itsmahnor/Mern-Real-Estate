@@ -7,7 +7,7 @@ export default function Header() {
       <Link to="/">
       <h1 className='font-semibold tracking-wide text-center sm:text-left'>
         <span className='text-base text-slate-200 sm:text-xl'>Sahand</span>
-        <span className='text-base text-slate-600 sm:text-xl font-bold'> Estate</span>
+        <span className='text-base text-slate-600 sm:text-xl font-bold'>Estate</span>
       </h1>
 </Link>
       {/* Search Bar */}
