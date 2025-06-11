@@ -25,3 +25,13 @@ app.listen(3000, ()=>{
 // routes
 app.use("/api",userRoutes)
 app.use("/api/auth",userauth)
+// middle ware
+app.use((err,req,res,next)=>{
+    const statuscode = err.statuscode || 500
+    const message = err.message || "Internet Server Error"
+return res.status(statuscode).json({
+    success: false,
+    statuscode,
+    message
+})
+})
