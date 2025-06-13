@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 export default function Header() {
+ 
+  const[clicked,isclicked]=useState(false)
+  function handleClick(e){
+    isclicked((clicked)=> !clicked)
+  }
   return (
     <div className='bg-slate-400 px-4 py-3 flex flex-col sm:flex-row sm:justify-between items-center gap-3 sm:gap-4 w-full shadow-md'>
       {/* Logo */}
@@ -24,7 +30,9 @@ export default function Header() {
       <ul className="flex gap-4 text-slate-200 text-sm sm:text-base font-medium">
         <Link to="/" className="hover:underline underline-offset-4 cursor-pointer transition hidden sm:inline">Home</Link>
         <Link to="/about" className="hover:underline underline-offset-4 cursor-pointer transition hidden sm:inline">About</Link>
-        <Link to="/signIn" className="hover:underline underline-offset-4 cursor-pointer transition">Sign In</Link>
+        {clicked &&   <Link to="/signIn" className="hover:underline underline-offset-4 cursor-pointer transition" onClick={handleClick}>Sign In</Link>}
+       {!clicked &&  <Link to="/signUp" className="hover:underline underline-offset-4 cursor-pointer transition" onClick={handleClick}>Sign Up</Link> }
+       
       </ul>
     </div>
   );
