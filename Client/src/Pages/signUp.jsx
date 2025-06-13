@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { useDispatch } from "react-redux";
+import { isClick } from "../Redux/User/userSlice";
 export default function SignUp() {
+   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formdata, setformdata] = useState({
     username: "",
@@ -99,9 +101,13 @@ export default function SignUp() {
       <div className="flex gap-2 mt-5 items-center">
         <p>Have an account?</p>
         <Link to="/signIn">
-          <p className="text-slate-700 font-bold text-sm cursor-pointer">
-            Sign in
-          </p>
+         <p
+  className="text-slate-700 font-bold text-sm cursor-pointer"
+  onClick={() => dispatch(isClick())}
+>
+  Sign in
+</p>
+
         </Link>
       </div>
     </div>
