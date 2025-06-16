@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { isClick } from "../Redux/User/userSlice";
+import OAuth from "../Components/OAuth";
 export default function SignUp() {
    const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ export default function SignUp() {
         >
           Sign up
         </button>
+        <OAuth />
       </form>
 
       <div className="flex gap-2 mt-5 items-center">

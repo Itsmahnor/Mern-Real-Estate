@@ -9,7 +9,7 @@ export const counterSlice = createSlice({
   initialState,
   reducers: {
     isClick: (state) => {
-     state.clicked= !clicked
+     state.clicked= !state.clicked
     },
   
   },

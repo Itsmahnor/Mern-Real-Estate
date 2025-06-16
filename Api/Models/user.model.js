@@ -18,6 +18,10 @@ const Userschema = mongoose.Schema({
         required : true,
    
     },
+    avator: {
+      type:String,
+      default:"https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+    }
 },{Timestamp:true});
 
 const User = mongoose.model("User",Userschema);
