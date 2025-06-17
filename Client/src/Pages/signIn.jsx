@@ -2,10 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { isClick } from "../Redux/User/userSlice";
+import { isClick,UserExist } from "../Redux/User/userSlice.js";
 import OAuth from "../Components/OAuth";
+import { useSelector } from "react-redux";
+
 
 export default function SignIn() {
+  const User = useSelector((state) => state.user.User)
+ 
    const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -47,10 +51,13 @@ export default function SignIn() {
       });
 
       const data = await res.json();
-
+console.log(data.user.avator)
       if (data.success === false) {
         toast.error(data.message || "Invalid credentials");
       } else {
+      
+   dispatch(UserExist({ User: data.user.username, avator: data.user.avator }));
+
         toast.success("Logged in successfully!");
         navigate("/"); // Redirect to homepage
       }

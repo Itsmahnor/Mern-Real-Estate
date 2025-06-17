@@ -2,10 +2,12 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { app } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { UserExist } from "../Redux/User/userSlice";
 
 export default function OAuth() {
   const navigate = useNavigate();
-
+const dispatch = useDispatch();
   async function HandleGoogleClick() {
     try {
       const provider = new GoogleAuthProvider();  
@@ -25,6 +27,7 @@ export default function OAuth() {
          const data = await res.json();
 console.log(data)
       if (data.success) {
+           dispatch(UserExist({User:data.username, avator : data.avator}))
         toast.success('Google sign-in successful!');
         navigate('/');
       } else {

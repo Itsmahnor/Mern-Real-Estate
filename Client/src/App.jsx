@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile"
 import Header from "./Components/Header"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProfileAuth from "./Components/ProfileAuth"
 export default function App() {
   return (
   
@@ -18,7 +19,8 @@ export default function App() {
      <Route  path="/about"  element={<About />} />
       <Route  path="/signIn"  element={<SignIn />} />
        <Route  path="/signUp"  element={<SignUp />} />
-        <Route  path="/profile"  element={<Profile />} />
+       <Route element={<ProfileAuth />} path="/profile">
+        <Route    element={<Profile />} /></Route>
    </Routes>
    </BrowserRouter>
   )

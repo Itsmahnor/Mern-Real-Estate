@@ -42,6 +42,7 @@ export const signin = async (req, res, next) => {
         id: existingUser._id,
         username: existingUser.username,
         email: existingUser.email,
+         avator : existingUser.avator, 
       },
     });
   } catch (err) {

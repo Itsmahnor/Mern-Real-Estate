@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { isClick } from "../Redux/User/userSlice";
+import { isClick,UserExist } from "../Redux/User/userSlice";
 import OAuth from "../Components/OAuth";
 export default function SignUp() {
    const dispatch = useDispatch();
@@ -53,10 +53,11 @@ export default function SignUp() {
       });
 
       const data = await res.json();
-
+console.log(data)
       if (data.success === false) {
         toast.error("Username or email already exists!");
       } else {
+          dispatch(UserExist({User:data.user.username, avator : data.user.avator}))
         toast.success(data.message || "Sign up successful!");
         navigate("/signIn");
       }

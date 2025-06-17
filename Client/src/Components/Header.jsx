@@ -5,7 +5,8 @@ import { isClick } from "../Redux/User/userSlice";
 
 export default function Header() {
   const clicked = useSelector((state) => state.user.clicked); 
-  const dispatch = useDispatch();
+  const avator = useSelector((state) => state.user.avator)
+  const dispatch = useDispatch();  console.log(avator)
 
   return (
     <div className='bg-slate-400 px-4 py-3 flex flex-col sm:flex-row sm:justify-between items-center gap-3 sm:gap-4 w-full shadow-md'>
@@ -31,8 +32,7 @@ export default function Header() {
       <ul className="flex gap-4 text-slate-200 text-sm sm:text-base font-medium">
         <Link to="/" className="hover:underline underline-offset-4 cursor-pointer transition hidden sm:inline">Home</Link>
         <Link to="/about" className="hover:underline underline-offset-4 cursor-pointer transition hidden sm:inline">About</Link>
-        
-        {clicked ? (
+      {!avator?( clicked? (
           <Link to="/signIn" className="hover:underline underline-offset-4 cursor-pointer transition" onClick={() => dispatch(isClick())}>
             Sign In
           </Link>
@@ -40,8 +40,12 @@ export default function Header() {
           <Link to="/signUp" className="hover:underline underline-offset-4 cursor-pointer transition" onClick={() => dispatch(isClick())}>
             Sign Up
           </Link>
-        )}
+        )):(
+          <Link to="/profile">
+        <img className="rounded-full w-7" src={avator} alt="img" /></Link>)} 
+       
       </ul>
     </div>
   );
+
 }
