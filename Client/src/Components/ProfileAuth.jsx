@@ -1,13 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
-import SignIn from '../Pages/signIn'
+import { Outlet, Navigate } from 'react-router-dom'
 
 export default function ProfileAuth() {
-    const user = useSelector((state) => state.user.User)
+  const user = useSelector((state) => state.user.User)
   return (
-    <div>
-      {!user? <SignIn /> : <Outlet />}
-    </div>
+    !user ? <Navigate to="/signIn" /> : <Outlet />
   )
 }
