@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import userRoutes from './Routes/user.routes.js';
 import userauth from './Routes/auth.routes.js'
-
+import cookieParser from 'cookie-parser';
 dotenv.config();
 const app = express()
 
@@ -25,6 +25,7 @@ app.listen(3000, ()=>{
 // routes
 app.use("/api",userRoutes)
 app.use("/api/auth",userauth)
+app.use(cookieParser())
 // middle ware
 app.use((err,req,res,next)=>{
     const statuscode = err.statuscode || 500

@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 export default function Profile() {
+ const fileref = useRef(null)
  const avator =  useSelector((state) => state.user.avator)
   return (
     <div className='p-5 max-w-lg mx-auto '>
      
  <h1 className='text-2xl font-semibold text-center my-5'>Profile</h1>
 <form className='flex flex-col gap-3 '>
-<img src={avator} alt="img" className='rounded-full self-center 
+  <input type='file' ref={fileref} className='hidden' accept='image/*'/>
+<img src={avator} onClick={()=> fileref.current.click()} alt="img" className='rounded-full self-center 
  h-24 w-24 object-cover  ' />
   <input
           type="text"
@@ -36,8 +38,8 @@ export default function Profile() {
         </button>
 </form>
 <div className='flex justify-between mt-5'>
-  <span className='text-red-700'>Delete account</span>
-   <span className='text-red-700'>Sign Out</span>
+  <span className='text-red-700 cursor-pointer'>Delete account</span>
+   <span className='text-red-700 cursor-default'>Sign Out</span>
 </div>
     </div>
   )
