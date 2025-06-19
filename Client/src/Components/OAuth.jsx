@@ -27,7 +27,12 @@ const dispatch = useDispatch();
          const data = await res.json();
 console.log(data)
       if (data.success) {
-           dispatch(UserExist({User:data.username, avator : data.avator}))
+          dispatch(UserExist({
+  User: data.user.username,
+  avator: data.user.avator,
+  id: data.user.id,
+}));
+
         toast.success('Google sign-in successful!');
         navigate('/');
       } else {

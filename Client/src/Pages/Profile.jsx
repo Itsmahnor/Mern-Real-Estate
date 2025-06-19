@@ -1,18 +1,44 @@
 import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-
+import { UserExist } from "../Redux/User/userSlice.js";
 export default function Profile() {
   const user = useSelector((state) => state.user.User);
   const id = useSelector((state) => state.user.id);
   const avator = useSelector((state) => state.user.avator);
-
+const dispatch = useDispatch();
   const fileRef = useRef(null);
   const [formData, setFormData] = useState({});
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+const DeleteUser = async () => {
+  const confirmDelete = window.confirm("Are you sure you want to delete your account?");
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`/api/user/delete/${id}`, {
+      method: "DELETE",
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200 || res.status === 201) {
+      toast.success(data.message || "Account deleted successfully!");
+      dispatch(UserExist({ User: null, id: null }));
+    } else {
+      toast.error(data.message || "Failed to delete account");
+    }
+  } catch (error) {
+    toast.error("Something went wrong while deleting the account.");
+  }
+};
+
+const SignOutUser =  () =>{
+   dispatch(UserExist({ User: null, id: null }));
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,8 +108,8 @@ export default function Profile() {
       </form>
 
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
-        <span className="text-red-700 cursor-default">Sign Out</span>
+        <span className="text-red-700 cursor-pointer" onClick={DeleteUser}>Delete account</span>
+        <span className="text-red-700 cursor-default" onClick={SignOutUser}>Sign Out</span>
       </div>
     </div>
   );
