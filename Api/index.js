@@ -5,6 +5,7 @@ import cors from 'cors';
 import userRoutes from './Routes/user.routes.js';
 import userauth from './Routes/auth.routes.js'
 import cookieParser from 'cookie-parser';
+import listingRoutes from './Routes/listingRoutes.js';
 dotenv.config();
 const app = express()
 app.use(cookieParser())
@@ -29,6 +30,7 @@ app.listen(3000, ()=>{
 // routes
 app.use("/api/user",userRoutes)
 app.use("/api/auth",userauth)
+app.use("/api/listing",listingRoutesRoutes)
 
 // middle ware
 app.use((err,req,res,next)=>{
