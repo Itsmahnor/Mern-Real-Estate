@@ -8,6 +8,7 @@ import Header from "./Components/Header"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProfileAuth from "./Components/ProfileAuth"
+import CreateListing from "./Pages/CreateListing"
 export default function App() {
   return (
   
@@ -21,6 +22,9 @@ export default function App() {
        <Route  path="/signUp"  element={<SignUp />} />
        <Route path="/profile" element={<ProfileAuth />}>
   <Route index element={<Profile />} />
+</Route>
+    <Route path="/createlisting" element={<ProfileAuth />}>
+  <Route index element={<CreateListing />} />
 </Route>
 
    </Routes>

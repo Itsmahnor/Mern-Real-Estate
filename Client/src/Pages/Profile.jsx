@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { UserExist } from "../Redux/User/userSlice.js";
+import { Link } from "react-router-dom";
 export default function Profile() {
   const user = useSelector((state) => state.user.User);
   const id = useSelector((state) => state.user.id);
@@ -105,6 +106,9 @@ const SignOutUser =  () =>{
         >
           UPDATE
         </button>
+        <Link to="/createlisting" className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95">
+        Create Listing
+        </Link>
       </form>
 
       <div className="flex justify-between mt-5">
