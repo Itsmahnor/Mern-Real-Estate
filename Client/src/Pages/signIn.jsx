@@ -56,7 +56,7 @@ console.log(data.user.avator)
         toast.error(data.message || "Invalid credentials");
       } else {
       
-   dispatch(UserExist({ User: data.user.username, avator: data.user.avator }));
+   dispatch(UserExist({ User: data.user.username, avator: data.user.avator, id: data.user.id }));
 
         toast.success("Logged in successfully!");
         navigate("/"); // Redirect to homepage

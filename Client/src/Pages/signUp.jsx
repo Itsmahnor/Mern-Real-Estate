@@ -57,7 +57,7 @@ console.log(data)
       if (data.success === false) {
         toast.error("Username or email already exists!");
       } else {
-          dispatch(UserExist({User:data.user.username, avator : data.user.avator}))
+          dispatch(UserExist({User:data.username, avator : data.avator}))
         toast.success(data.message || "Sign up successful!");
         navigate("/signIn");
       }

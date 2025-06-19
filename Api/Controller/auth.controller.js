@@ -16,25 +16,32 @@ const newpassword= bcrypt.hashSync(password,10)
   }
 };
 
-
-// Sign In Controller
+// sign in
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Check if user exists
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       return res.status(400).json({ success: false, message: "User not found!" });
     }
 
-    // 2. Compare hashed passwords
     const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({ success: false, message: "Incorrect password!" });
     }
 
-    // 3. Login successful
+    // 🔒 Generate JWT token
+    const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET);
+
+    // 🧁 Set cookie
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false, // change to true in production (https)
+    });
+
+    // ✅ Return user info
     res.status(200).json({
       success: true,
       message: "Logged in successfully!",
@@ -42,13 +49,14 @@ export const signin = async (req, res, next) => {
         id: existingUser._id,
         username: existingUser.username,
         email: existingUser.email,
-         avator : existingUser.avator, 
+        avator: existingUser.avator,
       },
     });
   } catch (err) {
     next(err);
   }
 };
+
 
 
 

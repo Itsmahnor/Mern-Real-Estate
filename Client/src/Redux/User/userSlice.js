@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   clicked: false,
   User: null,
-  avator:null
+  avator:null,
+  id:null
 }
 
 export const counterSlice = createSlice({
@@ -17,6 +18,7 @@ export const counterSlice = createSlice({
     UserExist:(state,action)=>{
     state.User = action.payload.User;
     state.avator = action.payload.avator;
+    state.id = action.payload.id
     }
   
   },
