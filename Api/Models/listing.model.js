@@ -56,4 +56,4 @@ const listingschema = mongoose.Schema({
 
 const Listing = mongoose.model("Listing",listingschema);
 
-export default User;
+export default Listing;

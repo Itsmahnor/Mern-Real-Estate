@@ -6,4 +6,4 @@ const router = express.Router();
 
 router.post('/create',VerifyToken,createListing)
 
-export default router=router
+export default router

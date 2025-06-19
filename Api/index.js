@@ -1,9 +1,11 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import uploadRouter from './Routes/upload.routes.js';
 import cors from 'cors';
 import userRoutes from './Routes/user.routes.js';
 import userauth from './Routes/auth.routes.js'
+import path from 'path';
 import cookieParser from 'cookie-parser';
 import listingRoutes from './Routes/listingRoutes.js';
 dotenv.config();
@@ -30,7 +32,9 @@ app.listen(3000, ()=>{
 // routes
 app.use("/api/user",userRoutes)
 app.use("/api/auth",userauth)
-app.use("/api/listing",listingRoutesRoutes)
+app.use("/api/listing",listingRoutes)
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/api', uploadRouter);
 
 // middle ware
 app.use((err,req,res,next)=>{
