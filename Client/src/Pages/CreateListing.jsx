@@ -1,182 +1,138 @@
-import React, { useState } from 'react';
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useSelector } from "react-redux";
-
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function CreateListing() {
-   const id = useSelector((state)=>state.user.id) 
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const userId = useSelector((state) => state.user.id);
+
   const [files, setFiles] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    address: '',
+    bedrooms: 1,
+    regularPrice: 1,
+    discountPrice: 1,
+    type: '',
+    parking: false,
+    furnished: false,
+    offer: false,
+  });
 
-  // Upload images to the server
-  const handleUpload = async () => {
-    if (files.length > 6) {
-      alert('You can only upload up to 6 images');
-      return;
-    }
-
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append('images', files[i]);
-    }
-
+useEffect(() => {
+  const fetchListing = async () => {
     try {
-      const res = await axios.post('/api/upload', formData);
+      const res = await axios.get(`/api/listing/single/${id}`, {
+        withCredentials: true,
+      });
+      setFormData(res.data); // load form with listing data
+    } catch (err) {
+      toast.error("Failed to fetch listing");
+      console.log(err);
+    }
+  };
+
+  fetchListing();
+}, [id]);
+
+  const handleUpload = async () => {
+    const form = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      form.append('images', files[i]);
+    }
+    try {
+      const res = await axios.post('/api/upload', form);
       setUploadedImages(res.data.images);
-      setFiles([]); // clear selected files
+      setFiles([]);
     } catch (err) {
       toast.error('Image upload failed');
     }
   };
 
-  // Delete an uploaded image preview
-  const handleDelete = (filename) => {
-    setUploadedImages(prev => prev.filter(img => img.name !== filename));
-  };
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  const listingData = {
-    name: e.target.Name.value,
-    description: e.target.Description.value,
-    address: e.target.address.value,
-    regularPrice: Number(e.target['Regular Price'].value),
-    discountPrice: Number(e.target['Discount Price'].value),
-    bedrooms: Number(e.target.bedrooms.value),
-    furnished: e.target.Furnished.checked,
-    parking: e.target['Parking spot'].checked,
-    type: e.target.sale.checked ? 'sale' : e.target.Rent.checked ? 'rent' : '',
-    offer: e.target.offer.checked,
-    imageUrls: uploadedImages.map(img => img.url),
-    userRef: id, 
+  const handleDeleteImage = (filename) => {
+    setUploadedImages((prev) => prev.filter((img) => img.name !== filename));
   };
 
-  try {
-    const res = await axios.post('/api/listing/create', listingData);
-   
- toast.success('Listing created!');
-    
-    
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-    toast.error('Failed to create listing');
-  }
-};
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const listingData = {
+      ...formData,
+      imageUrls: uploadedImages.map((img) => img.url),
+      userRef: userId,
+    };
+    try {
+      if (id) {
+        await axios.put(`/api/listing/update/${id}`, listingData, {
+          withCredentials: true,
+        });
+        toast.success('Listing updated');
+      } else {
+        await axios.post('/api/listing/create', listingData);
+        toast.success('Listing created');
+      }
+      navigate('/profile');
+    } catch (err) {
+      toast.error('Submit failed');
+    }
+  };
 
   return (
     <main className='p-3 max-w-4xl mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Create a Listing</h1>
+      <h1 className='text-3xl font-semibold text-center my-7'>{id ? 'Edit' : 'Create'} a Listing</h1>
       <form className='flex gap-4 flex-col sm:flex-row' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-4 flex-1'>
-          <input type="text" maxLength='62' minLength={10} required placeholder='Name' id='Name' className='border p-3 rounded-lg' />
-          <textarea type="text" required placeholder='Description' id='Description' className='border p-3 rounded-lg' />
-          <input type="text" placeholder='address' id='address' required className='border p-3 rounded-lg' />
+          <input type='text' required placeholder='Name' className='border p-3 rounded-lg'
+            value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+          <textarea required placeholder='Description' className='border p-3 rounded-lg'
+            value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+          <input type='text' required placeholder='Address' className='border p-3 rounded-lg'
+            value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
 
-         <div className='flex gap-5 flex-wrap'>
-    <div className='flex gap-2'>
-        <input type="checkbox" id='sale' name='sell' className='w-5' />
-        <span>Sell</span>
-    </div>
-    <div className='flex gap-2'>
-        <input type="checkbox" id='Rent' name='sell' className='w-5' />
-        <span>Rent</span>
-    </div>
-    <div className='flex gap-2'>
-        <input type="checkbox" id='Parking spot' className='w-5' />
-        <span>Parking spot</span>
-    </div>
-    <div className='flex gap-2'>
-        <input type="checkbox" id='Furnished' className='w-5' />
-        <span>Furnished</span>
-    </div>
-        <div className='flex gap-2'>
-        <input type="checkbox" id='offer' className='w-5' />
-        <span>Offer</span>
-    </div>
-</div>
-<div className='flex flex-wrap gap-6'>
-    <div className='flex items-center gap-2'>
-        <input className='p-3 border border-gray-300 rounded-lg' type="number" id='bedrooms' max='10' min='1' required />
-        <p>Beds</p>
-    </div>
-        <div className='flex items-center gap-2'>
-        <input className='p-3 border border-gray-300 rounded-lg' type="number" id='Baths' max='10' min='1' required />
-        <p>Baths</p>
-    </div>
-        <div className='flex items-center gap-2'>
-        <input className='p-3 border border-gray-300 rounded-lg' type="number" id='Regular Price' max='10' min='1' required />
-       <div className='flex flex-col items-center'>
-     <p>Regular Price</p>
-     <span className='text-xs'>($ / month)</span>
-       </div>
-   
-    </div>
-        <div className='flex items-center gap-2'>
-        <input className='p-3 border border-gray-300 rounded-lg' type="number" id='Discount Price' max='10' min='1' required />
-         <div className='flex flex-col items-center'>
-     <p>Discount Price</p>
-     <span className='text-xs'>($ / month)</span>
-       </div>
-    </div>
-</div>
+          <div className='flex gap-5 flex-wrap'>
+            <label><input type='checkbox' checked={formData.type === 'sale'}
+              onChange={() => setFormData({ ...formData, type: 'sale' })} /> Sell</label>
+            <label><input type='checkbox' checked={formData.type === 'rent'}
+              onChange={() => setFormData({ ...formData, type: 'rent' })} /> Rent</label>
+            <label><input type='checkbox' checked={formData.parking}
+              onChange={(e) => setFormData({ ...formData, parking: e.target.checked })} /> Parking</label>
+            <label><input type='checkbox' checked={formData.furnished}
+              onChange={(e) => setFormData({ ...formData, furnished: e.target.checked })} /> Furnished</label>
+            <label><input type='checkbox' checked={formData.offer}
+              onChange={(e) => setFormData({ ...formData, offer: e.target.checked })} /> Offer</label>
+          </div>
+
+          <div className='flex flex-wrap gap-6'>
+            <div><input type='number' min='1' value={formData.bedrooms} className='border p-3 rounded-lg'
+              onChange={(e) => setFormData({ ...formData, bedrooms: Number(e.target.value) })} /> Beds</div>
+            <div><input type='number' min='1' value={formData.regularPrice} className='border p-3 rounded-lg'
+              onChange={(e) => setFormData({ ...formData, regularPrice: Number(e.target.value) })} /> Regular Price</div>
+            <div><input type='number' min='1' value={formData.discountPrice} className='border p-3 rounded-lg'
+              onChange={(e) => setFormData({ ...formData, discountPrice: Number(e.target.value) })} /> Discount Price</div>
+          </div>
         </div>
 
         <div className='flex flex-col flex-1 gap-4'>
-          <p className='font-semibold'>Images:
-            <span className='font-normal text-gray-600 ml-2'>(Max 6)</span>
-          </p>
-
+          <p className='font-semibold'>Images (max 6)</p>
           <div className='flex gap-4'>
-           <input
-  type="file"
-  className='p-3 border border-gray-300 rounded w-full'
-  id="images"
-  accept='image/*'
-  multiple
-  onChange={(e) => {
-    const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length > 6) {
-      toast.warn('Only the first 6 images will be selected');
-    }
-    setFiles(selectedFiles.slice(0, 6));
-  }}
-/>
-
-            <button
-              type='button'
-              onClick={handleUpload}
-              className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
-              disabled={files.length === 0}
-            >
-              Upload
-            </button>
+            <input type='file' accept='image/*' multiple
+              onChange={(e) => setFiles(Array.from(e.target.files).slice(0, 6))} />
+            <button type='button' onClick={handleUpload} disabled={files.length === 0} className='text-green-700'>Upload</button>
           </div>
-
-          {/* Preview Uploaded Images */}
           <div className='flex flex-wrap gap-4'>
             {uploadedImages.map((img, i) => (
               <div key={i} className='relative w-24 h-24'>
-                <img src={img.url} alt='uploaded' className='w-full h-full object-cover rounded' />
-                <button
-                  type='button'
-                  onClick={() => handleDelete(img.name)}
-                  className='absolute top-1 right-1 bg-red-600 text-white text-xs px-1 rounded-full'
-                >
-                  X
-                </button>
+                <img src={img.url} alt='' className='w-full h-full object-cover rounded' />
+                <button type='button' onClick={() => handleDeleteImage(img.name)} className='absolute top-0 right-0 bg-red-600 text-white px-1 rounded'>X</button>
               </div>
             ))}
           </div>
-
-          <button
-            type='submit'
-            className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
-           
-          >
-            Create Listing
+          <button type='submit' className='bg-slate-700 text-white p-3 rounded-lg'>
+            {id ? 'Update Listing' : 'Create Listing'}
           </button>
         </div>
       </form>

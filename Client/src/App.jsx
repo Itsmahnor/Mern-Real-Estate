@@ -26,6 +26,7 @@ export default function App() {
     <Route path="/createlisting" element={<ProfileAuth />}>
   <Route index element={<CreateListing />} />
 </Route>
+<Route path="/edit/:id" element={<CreateListing />} />
 
    </Routes>
    </BrowserRouter>
