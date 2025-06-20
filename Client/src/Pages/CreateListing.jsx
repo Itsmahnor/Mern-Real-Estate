@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios'
 import { toast } from 'react-toastify';
+import { useSelector } from "react-redux";
+
 
 export default function CreateListing() {
+   const id = useSelector((state)=>state.user.id) 
   const [files, setFiles] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
-console.log(uploadedImages)
+
   // Upload images to the server
   const handleUpload = async () => {
     if (files.length > 6) {
@@ -31,18 +34,37 @@ console.log(uploadedImages)
   const handleDelete = (filename) => {
     setUploadedImages(prev => prev.filter(img => img.name !== filename));
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const listingData = {
-      name: e.target.Name.value,
-      description: e.target.Description.value,
-      address: e.target.address.value,
-      images: uploadedImages,
-    };
-    console.log('Final data to send to MongoDB:', listingData);
-    // You can now send listingData to your backend using axios.post
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  const listingData = {
+    name: e.target.Name.value,
+    description: e.target.Description.value,
+    address: e.target.address.value,
+    regularPrice: Number(e.target['Regular Price'].value),
+    discountPrice: Number(e.target['Discount Price'].value),
+    bedrooms: Number(e.target.bedrooms.value),
+    furnished: e.target.Furnished.checked,
+    parking: e.target['Parking spot'].checked,
+    type: e.target.sale.checked ? 'sale' : e.target.Rent.checked ? 'rent' : '',
+    offer: e.target.offer.checked,
+    imageUrls: uploadedImages.map(img => img.url),
+    userRef: id, 
   };
+
+  try {
+    const res = await axios.post('/api/listing/create', listingData);
+   
+ toast.success('Listing created!');
+    
+    
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+    toast.error('Failed to create listing');
+  }
+};
+
 
   return (
     <main className='p-3 max-w-4xl mx-auto'>
@@ -55,11 +77,11 @@ console.log(uploadedImages)
 
          <div className='flex gap-5 flex-wrap'>
     <div className='flex gap-2'>
-        <input type="checkbox" id='sale' className='w-5' />
+        <input type="checkbox" id='sale' name='sell' className='w-5' />
         <span>Sell</span>
     </div>
     <div className='flex gap-2'>
-        <input type="checkbox" id='Rent' className='w-5' />
+        <input type="checkbox" id='Rent' name='sell' className='w-5' />
         <span>Rent</span>
     </div>
     <div className='flex gap-2'>
@@ -152,6 +174,7 @@ console.log(uploadedImages)
           <button
             type='submit'
             className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
+           
           >
             Create Listing
           </button>

@@ -1,5 +1,5 @@
 import Listing from '../Models/listing.model.js'
-export const createListing = async (req,resizeBy,next)=>{
+export const createListing = async (req,res,next)=>{
     try {
        const listing = await Listing.create(req.body);
        return res.status(201).json(listing)
