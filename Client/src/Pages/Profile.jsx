@@ -184,59 +184,37 @@ const getListing = async () => {
   <div className="mt-8">
     <h2 className="text-xl font-bold mb-4 text-center">Your Listings</h2>
     <div className="grid gap-5">
-      {listings.map((listing, index) => (
-        <div
-          key={index}
-          className="border rounded-lg p-4 shadow-md bg-white text-black flex flex-col md:flex-row md:justify-between md:items-start"
-        >
-          <div className="md:w-3/4">
-            <h3 className="text-lg font-semibold text-slate-700">{listing.name}</h3>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Description:</span> {listing.description}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Address:</span> {listing.address}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Type:</span> {listing.type}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Price:</span> Rs.{listing.regularPrice} {listing.discountPrice > 0 && `(Discount: Rs.${listing.discountPrice})`}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Bedrooms:</span> {listing.bedrooms}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Parking:</span> {listing.parking ? "Yes" : "No"}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Furnished:</span> {listing.furnished ? "Yes" : "No"}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Offer:</span> {listing.offer ? "Yes" : "No"}
-            </p>
-        
-          </div>
+  {listings.map((listing, index) => (
+  <div
+    key={index}
+    className="border rounded-md p-3 flex items-center justify-between bg-white text-black"
+  >
+    <div className="flex items-center gap-4">
+      <img
+        src={listing.imageUrls[0]}
+        alt="listing"
+        className="w-20 h-14 object-cover rounded"
+      />
+      <p className="font-medium text-gray-800">{listing.name}</p>
+    </div>
 
-          {/* Buttons */}
-          <div className="flex flex-col gap-2 mt-4 md:mt-0 md:ml-4">
-            <button
-         
-              className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700"
-              onClick={() => navigate(`/edit/${listing._id}`)}
+    <div className="flex gap-2 flex-col">
+      <button
+        onClick={() => handleDelete(listing._id)}
+        className="text-red-600 text-sm font-semibold"
+      >
+        DELETE
+      </button>
+      <button
+        onClick={() => navigate(`/edit/${listing._id}`)}
+        className="text-green-600 text-sm font-semibold"
+      >
+        EDIT
+      </button>
+    </div>
+  </div>
+))}
 
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDelete(listing._id)}
-              className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      ))}
     </div>
   </div>
 )}

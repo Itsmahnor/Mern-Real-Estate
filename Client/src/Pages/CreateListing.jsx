@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function CreateListing() {
@@ -32,7 +32,7 @@ useEffect(() => {
       });
       setFormData(res.data); // load form with listing data
     } catch (err) {
-      toast.error("Failed to fetch listing");
+      // toast.error("Failed to fetch listing");
       console.log(err);
     }
   };
@@ -77,7 +77,7 @@ useEffect(() => {
       }
       navigate('/profile');
     } catch (err) {
-      toast.error('Submit failed');
+      toast.error(`Submit failed `);
     }
   };
 
@@ -132,7 +132,7 @@ useEffect(() => {
             ))}
           </div>
           <button type='submit' className='bg-slate-700 text-white p-3 rounded-lg'>
-            {id ? 'Update Listing' : 'Create Listing'}
+            {id ?<Link to={`/listing/${id}`}>Update Listing</Link>  : 'Create Listing'}
           </button>
         </div>
       </form>

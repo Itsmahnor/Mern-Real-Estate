@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProfileAuth from "./Components/ProfileAuth"
 import CreateListing from "./Pages/CreateListing"
+import Listing from "./Pages/Listing"
 export default function App() {
   return (
   
@@ -19,6 +20,7 @@ export default function App() {
     <Route  path="/"  element={<Home />} />
      <Route  path="/about"  element={<About />} />
       <Route  path="/signIn"  element={<SignIn />} />
+       <Route  path="/listing/:listingid"  element={ <Listing />} />
        <Route  path="/signUp"  element={<SignUp />} />
        <Route path="/profile" element={<ProfileAuth />}>
   <Route index element={<Profile />} />

@@ -22,8 +22,9 @@ const dispatch = useDispatch();
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({name: result.user.displayName,email: result.user.email, 
-          photo: result.user.photoURL
+          photo: result.user.avator
         })})
+        console.log(result.user.photoURL)
          const data = await res.json();
 console.log(data)
       if (data.success) {
