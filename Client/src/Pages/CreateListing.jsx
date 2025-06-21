@@ -30,15 +30,17 @@ useEffect(() => {
       const res = await axios.get(`/api/listing/single/${id}`, {
         withCredentials: true,
       });
-      setFormData(res.data); // load form with listing data
+      setFormData(res.data);
+     
+      setUploadedImages(res.data.imageUrls.map((url) => ({ url, name: url })));
     } catch (err) {
-      // toast.error("Failed to fetch listing");
       console.log(err);
     }
   };
 
   fetchListing();
 }, [id]);
+
 
   const handleUpload = async () => {
     const form = new FormData();
@@ -47,7 +49,8 @@ useEffect(() => {
     }
     try {
       const res = await axios.post('/api/upload', form);
-      setUploadedImages(res.data.images);
+   setUploadedImages((prev) => [...prev, ...res.data.images]);
+
       setFiles([]);
     } catch (err) {
       toast.error('Image upload failed');
@@ -126,7 +129,7 @@ useEffect(() => {
           <div className='flex flex-wrap gap-4'>
             {uploadedImages.map((img, i) => (
               <div key={i} className='relative w-24 h-24'>
-                <img src={img.url} alt='' className='w-full h-full object-cover rounded' />
+                <img src={img.url || formData.imageUrls} alt=''  className='w-full h-full object-cover rounded' />
                 <button type='button' onClick={() => handleDeleteImage(img.name)} className='absolute top-0 right-0 bg-red-600 text-white px-1 rounded'>X</button>
               </div>
             ))}
