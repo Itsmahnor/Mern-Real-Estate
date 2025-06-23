@@ -25,7 +25,7 @@ export default function Listing() {
         const data = await response.json();
 
         if (data.success === false) {
-          toast.error('Failed to fetch data');
+          toast.error('Something went wrong');
           return;
         }
 

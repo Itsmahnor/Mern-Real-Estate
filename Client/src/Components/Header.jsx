@@ -1,29 +1,32 @@
 import { IoSearch } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { isClick } from "../Redux/User/userSlice";
 import { useEffect, useState } from "react";
 
 export default function Header() {
-  const Navigate =  useNavigate()
-  const[searchTerm,setsearchTerm] =useState('')
-  const clicked = useSelector((state) => state.user.clicked); 
-  const avator = useSelector((state) => state.user.avator)
-  const dispatch = useDispatch();  console.log(avator)
-const handleSubmit = (e) =>{
-  e.PreventDefault();
-  const urlParams = new URLSearchParams(window.location.search);
-  urlParams.set('searchTerm',searchTerm);
-  const searchquery  = urlParams.toString();
- Navigate(`/search?${searchquery}`);
-};
-useEffect(()=>{
-const urlParams =  new URLSearchParams(location.search);
-const SearchTermFromUrl = urlParams.get('searchTerm');
-if(SearchTermFromUrl){
-  setsearchTerm(SearchTermFromUrl)
-}
-},[location.search])
+  const navigate = useNavigate();
+  const location = useLocation(); 
+  const [searchTerm, setsearchTerm] = useState('');
+  const clicked = useSelector((state) => state.user.clicked);
+  const avator = useSelector((state) => state.user.avator);
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('searchTerm', searchTerm);
+    const searchquery = urlParams.toString();
+    navigate(`/search?${searchquery}`);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const SearchTermFromUrl = urlParams.get('searchTerm');
+    if (SearchTermFromUrl) {
+      setsearchTerm(SearchTermFromUrl);
+    }
+  }, [location.search]);
   return (
     <div className='bg-slate-400 px-4 py-3 flex flex-col sm:flex-row sm:justify-between items-center gap-3 sm:gap-4 w-full shadow-md'>
       {/* Logo */}

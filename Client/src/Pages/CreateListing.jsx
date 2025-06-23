@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function CreateListing() {
@@ -73,12 +73,14 @@ useEffect(() => {
         await axios.put(`/api/listing/update/${id}`, listingData, {
           withCredentials: true,
         });
-        toast.success('Listing updated');
+      
+       
       } else {
         await axios.post('/api/listing/create', listingData);
-        toast.success('Listing created');
+      
+         
       }
-      navigate('/profile');
+navigate(`/listing/${id}`)
     } catch (err) {
       toast.error(`Submit failed `);
     }
